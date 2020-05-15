@@ -1,0 +1,11 @@
+Debug/
+.mxproject
+
+*Debug.cfg
+*Run.cfg
+**/.cortex-debug*
+
+**/Backup/
+
+*.txt
+
