@@ -151,7 +151,8 @@ int main(void)
   while (1)
   {
 
-	  printf("####### BEGIN PROGRAM... #######\r\n");
+	  printf("####### BEGIN LOOP... #######\r\n");
+//	  HAL_Delay(200);
 	  buff[0] = LM75_TEMP_REG;
 
 	  if(HAL_I2C_Master_Transmit(&hi2c4, LM75_ADDR, buff, 1, 50) != HAL_OK)
@@ -162,14 +163,14 @@ int main(void)
 	  {
 
 		  HAL_I2C_Master_Receive(&hi2c4, LM75_ADDR, rec_buff, 2, 50);
-		  value = (rec_buff[0] << 8) | rec_buff[6];
+		  value = (rec_buff[0] << 8) | rec_buff[1];
 		  printf("value %d \r\n", value);
 		  temp = ((float)value)/256.0;
 		  printf("temp %.1f ' C\r\n", temp);
 		  memset(rec_buff, 0, 2);
-		  printf("####### END PROGRAM... #######\r\n\r\n\r\n");
+		  printf("####### END LOOP... #######\r\n\r\n\r\n");
 	  }
-	  HAL_Delay(5000);
+	  HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
