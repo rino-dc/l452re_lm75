@@ -66,8 +66,11 @@ int __io_getchar(void)
 }
 
 uint8_t buff[16];
+uint8_t rec_buff[2];
 uint16_t value = 0;
 float temp = 0.0;
+
+uint8_t i  =0 ;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -113,7 +116,6 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  uint8_t i;
   for (i=1; i<128; i++)
   {
 	  /*
@@ -136,11 +138,11 @@ int main(void)
   printf("\r\n");
   if((HAL_I2C_IsDeviceReady(&hi2c4, LM75_ADDR, 1, HAL_MAX_DELAY) != HAL_OK))
   {
-	  printf("LM75 error...\r\n\r\n");
+	  printf("LM75 ERROR!\r\n\r\n");
   }
   else
   {
-	  printf("LM75 ready...\r\n\r\n");
+	  printf("LM75 READY...\r\n\r\n");
   }
   /* USER CODE END 2 */
 
@@ -151,15 +153,22 @@ int main(void)
 
 	  printf("####### BEGIN PROGRAM... #######\r\n");
 	  buff[0] = LM75_TEMP_REG;
-	  uint8_t rec_buff[2];
-	  HAL_I2C_Master_Transmit(&hi2c4, LM75_ADDR, buff, 1, 50);
-	  HAL_I2C_Master_Receive(&hi2c4, LM75_ADDR, rec_buff, 2, 50);
 
-	  value = (rec_buff[0] << 8) | rec_buff[1];
-	  printf("value %d \r\n", value);
-	  temp = ((float)value);
-	  printf("temp %.2f ' C\r\n", temp);
-	  printf("####### END PROGRAM... #######\r\n\r\n\r\n");
+	  if(HAL_I2C_Master_Transmit(&hi2c4, LM75_ADDR, buff, 1, 50) != HAL_OK)
+	  {
+		  printf("Reading Sensor ERROR!");
+	  }
+	  else
+	  {
+
+		  HAL_I2C_Master_Receive(&hi2c4, LM75_ADDR, rec_buff, 2, 50);
+		  value = (rec_buff[0] << 8) | rec_buff[6];
+		  printf("value %d \r\n", value);
+		  temp = ((float)value)/256.0;
+		  printf("temp %.1f ' C\r\n", temp);
+		  memset(rec_buff, 0, 2);
+		  printf("####### END PROGRAM... #######\r\n\r\n\r\n");
+	  }
 	  HAL_Delay(5000);
     /* USER CODE END WHILE */
 
