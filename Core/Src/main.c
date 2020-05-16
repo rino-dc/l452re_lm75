@@ -164,7 +164,7 @@ int main(void)
 
 		  HAL_I2C_Master_Receive(&hi2c4, LM75_ADDR, rec_buff, 2, 50);
 		  value = (rec_buff[0] << 8) | rec_buff[1];
-		  printf("value %d \r\n", value);
+//		  printf("value %d \r\n", value);
 		  temp = ((float)value)/256.0;
 		  printf("temp %.1f ' C\r\n", temp);
 		  memset(rec_buff, 0, 2);
